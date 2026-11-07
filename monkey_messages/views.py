@@ -7,22 +7,29 @@ from django.shortcuts import render
 
 from .models import Monkey_Message
 
-
+#-----------------------------------------------------------------------------
+# verifying matching secret API key
+#-----------------------------------------------------------------------------
 def authorized(request):
     return (
         request.headers.get("X-API-Key")
         == settings.MESSAGE_API_KEY
     )
 
-
+#-----------------------------------------------------------------------------
+# POST to create a monkey message
+#-----------------------------------------------------------------------------
 @csrf_exempt
 def create_message(request):
+
+    # ensure only POST
     if request.method != "POST":
         return JsonResponse(
             {"error": "Method not allowed"},
             status=405,
         )
 
+    # verifying key
     if not authorized(request):
         return JsonResponse(
             {"error": "Unauthorized"},
@@ -33,18 +40,19 @@ def create_message(request):
         data = json.loads(request.body)
         text = data.get("text", "").strip()
 
+        # error if empty message or less than 1000 chars
         if not text:
             return JsonResponse(
                 {"error": "Message cannot be empty"},
                 status=400,
             )
-
         if len(text) > 1000:
             return JsonResponse(
                 {"error": "Message must be 1000 characters or fewer"},
                 status=400,
             )
 
+        # adding entry to message model - returns id, text, created_at
         message = Monkey_Message.objects.create(text=text)
 
         return JsonResponse(
@@ -62,7 +70,9 @@ def create_message(request):
             status=400,
         )
 
-
+#-----------------------------------------------------------------------------
+# GET to recieve latest message in the db
+#-----------------------------------------------------------------------------
 def latest_message(request):
     if request.method != "GET":
         return JsonResponse(
@@ -76,8 +86,10 @@ def latest_message(request):
             status=401,
         )
 
+    # query db to get highest id
     message = Monkey_Message.objects.order_by("-id").first()
 
+    # if db is empty return None
     if message is None:
         return JsonResponse(
             {"id": None, "text": None},
@@ -91,6 +103,9 @@ def latest_message(request):
         }
     )
 
+#-----------------------------------------------------------------------------
+# GET to recieve latest 50 messages in the db
+#-----------------------------------------------------------------------------
 def message_history(request):
     if request.method != "GET":
         return JsonResponse(
@@ -104,6 +119,7 @@ def message_history(request):
             status=401,
         )
 
+    # query limits by 50 and orders latest to top
     messages = Monkey_Message.objects.order_by("-id")[:50]
 
     return JsonResponse({
@@ -117,5 +133,8 @@ def message_history(request):
         ]
     })
 
+#-----------------------------------------------------------------------------
+# base view to render index page
+#-----------------------------------------------------------------------------
 def index_ui(request):
     return render(request, "monkey_messages/index.html")

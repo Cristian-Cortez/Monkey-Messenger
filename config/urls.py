@@ -20,6 +20,6 @@ from monkey_messages.views import index_ui
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index_ui, name='index_ui'),  # Root serves GUI
+    path('', index_ui, name='index_ui'),  # Root serves index.html from monkey_messages
     path("api/monkey_messages/", include("monkey_messages.urls")),
 ]
