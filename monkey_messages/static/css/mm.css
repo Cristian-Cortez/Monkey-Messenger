@@ -77,6 +77,23 @@ textarea {
     resize: vertical;
 }
 
+input[type="file"]::file-selector-button{
+    background-color: var(--bg-color);
+    color: #4b8eab;
+    border: 0.5px solid #4b8eab;
+    margin-right: 1vh;
+}
+
+input[type="file"]::file-selector-button:hover{
+    cursor: pointer;
+    background-color: var(--primary-hover);
+}
+
+#imageInput{
+    margin-bottom: 2.8vh;
+    color: var(--text-muted)
+}
+
 .meta-bar {
     display: flex;
     justify-content: space-between;
@@ -117,14 +134,6 @@ button:hover {
     padding-right: 6px;
 }
 
-.history-item {
-    padding: 10px;
-    border-bottom: 1px solid var(--border);
-}
-
-.history-item:last-child {
-    border-bottom: none;
-}
 
 .history-date {
     font-size: 0.75rem;
@@ -147,6 +156,97 @@ button:hover {
 
 .history-list::-webkit-scrollbar-thumb:hover {
     background: var(--text-muted);
+}
+
+.history-item {
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    /* Aligns image and text to top */
+    gap: 12px;
+    /* Space between image and text */
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-image {
+    width: 80px;
+    /* Match ESP32 64x64 scale (or set to 80px / 100px) */
+    height: 80px;
+    object-fit: fill;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    /* Prevents image from shrinking when text is long */
+    /* image-rendering: pixelated; */
+}
+
+.history-image:hover {
+    transform: scale(1.15);
+}
+
+.history-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    /* Ensures long words wrap properly inside flex items */
+}
+
+.history-text {
+    word-break: break-word;
+    margin-bottom: 4px;
+}
+
+.history-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Modal Overlay Backdrop */
+.modal-overlay {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+    /* Smooth background blur */
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Enlarged Image Container */
+.modal-image {
+    max-width: 90vw;
+    max-height: 85vh;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    object-fit: contain;
+}
+
+/* Close Button (X) */
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #e96963;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
+
+.modal-close:hover {
+    color: #c49852;
 }
 
 @media (max-width: 768px) {

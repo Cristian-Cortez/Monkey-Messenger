@@ -17,9 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from monkey_messages.views import index_ui
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index_ui, name='index_ui'),  # Root serves index.html from monkey_messages
     path("api/monkey_messages/", include("monkey_messages.urls")),
 ]
+
+# appends media file serving route only during local development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

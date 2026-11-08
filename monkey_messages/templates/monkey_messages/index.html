@@ -36,10 +36,19 @@
             <div class="meta-bar">
                 <span id="charCounter">0 / 1000</span>
             </div>
-    
-            <button onclick="sendMessage()">Send to ESP32</button>
+
+            <label for="imageInput"> Pic? </label>
+            <input type="file" id="imageInput" accept="image/*">
+
+            <button id="sendBtn" onclick="sendMessage()">Send to ESP32</button>
             <div id="status"></div>
         </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="imageModal" class="modal-overlay" onclick="closeModal(event)">
+        <span class="modal-close" onclick="closeModal(event)">&times;</span>
+        <img class="modal-image" id="modalImage" src="" alt="Enlarged view">
     </div>
 
     <script src="{% static './js/mm.js' %}"></script>
