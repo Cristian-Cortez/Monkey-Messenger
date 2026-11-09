@@ -32,7 +32,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ["192.168.1.173", "0.0.0.0", "cristianwuzhear.pythonanywhere.com"]
+ALLOWED_HOSTS = ["*", "0.0.0.0", "cristianwuzhear.pythonanywhere.com"]
 
 
 # Application definition
