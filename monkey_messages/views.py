@@ -107,7 +107,7 @@ def create_message(request):
     # Process image if provided
     if image_file:
         try:
-            compressed_file, image_base64 = process_image(image_file)
+            compressed_file, image_base64 = process_image(image_file, avatar_size=(124,124))
         except Exception as e:
             return JsonResponse({"error": f"Invalid image file: {str(e)}"}, status=400)
 
