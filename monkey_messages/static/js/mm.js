@@ -92,7 +92,7 @@ async function sendMessage(e) {
 
         if (response.ok) {
             statusEl.innerText = "Message sent successfully!";
-            statusEl.style.color = "#c668c4";
+            statusEl.style.color = "#b24db0";
             document.getElementById("messageText").value = "";
             if (imageInput) imageInput.value = "";
             updateCounter();

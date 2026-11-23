@@ -9,7 +9,7 @@ from django.core.files.base import ContentFile
 import os
 import base64
 from io import BytesIO
-from PIL import Image
+from PIL import Image, ImageOps
 
 from .models import Monkey_Message
 
@@ -24,45 +24,66 @@ def authorized(request):
 
 #-----------------------------------------------------------------------------
 # helper to process uploaded image:
-# 1. Compress & downscale file for web/disk storage (Max 320x240 JPEG)
+# 1. Compress & downscale file for web/disk storage (Max 320x320 JPEG)
 # 2. Convert to 64x64 RGB565 Base64 string for ESP32 avatar
 # 3. thank you gemini for this
 #-----------------------------------------------------------------------------
-def process_image(image_file, max_size=(320, 240), avatar_size=(64, 64), quality=70):
-    image_file.seek(0)
+def process_image(image_file, max_size=(320, 320), avatar_size=(64, 64), quality=70):
     
-    with Image.open(image_file) as img:
-        # Convert RGBA / Palette mode images to standard RGB for JPEG output
-        if img.mode in ("RGBA", "P"):
-            img = img.convert("RGB")
-        else:
-            img = img.convert("RGB")
+    image_file.seek(0)
 
-        # Generate 64x64 RGB565 Base64 for ESP32 ---
-        avatar = img.resize(avatar_size, Image.Resampling.LANCZOS).convert('RGB')
+    with Image.open(image_file) as img:
+
+        # Correct image orientation
+        img = ImageOps.exif_transpose(img)
+
+        # Convert to RGB for JPEG compatibility
+        img = img.convert("RGB")
+
+        # Crop image into a centered square
+        square_img = ImageOps.fit(
+            img,
+            max_size,
+            method=Image.Resampling.LANCZOS,
+            centering=(0.5, 0.5)
+        )
+
+        # Generate square RGB565 avatar for ESP32
+        avatar = ImageOps.fit(
+            square_img,
+            avatar_size,
+            method=Image.Resampling.LANCZOS
+        )
+
         raw_bytes = bytearray()
 
-        # avatar.getdata() iterates flat in C-level memory (under 5ms for 64x64)
         for r, g, b in avatar.getdata():
             rgb565 = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
+
             raw_bytes.append((rgb565 >> 8) & 0xFF)
             raw_bytes.append(rgb565 & 0xFF)
-                
-        image_base64 = base64.b64encode(raw_bytes).decode('utf-8')
 
-        # --- 2. Compress & Downscale JPEG for Server Storage ---
-        compressed_img = img.copy()
-        compressed_img.thumbnail(max_size, Image.Resampling.LANCZOS)
-        
+        image_base64 = base64.b64encode(raw_bytes).decode("utf-8")
+
+        # Compress square image for server storage
         buffer = BytesIO()
-        compressed_img.save(buffer, format="JPEG", quality=quality, optimize=True)
-        
-        # Ensure file extension ends with .jpg
+
+        square_img.save(
+            buffer,
+            format="JPEG",
+            quality=quality,
+            optimize=True
+        )
+
+        # Generate filename
         orig_name = image_file.name if hasattr(image_file, 'name') else "image.jpg"
         base_name = os.path.splitext(orig_name)[0]
         filename = f"{base_name}.jpg"
 
-        compressed_file = ContentFile(buffer.getvalue(), name=filename)
+        compressed_file = ContentFile(
+            buffer.getvalue(),
+            name=filename
+        )
 
     return compressed_file, image_base64
 

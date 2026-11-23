@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@300..800&display=swap');
+
 :root {
 
-    --bg-color: #22272d;
+    /* keeping this stuff here in case i want to go back to dark mode */
+    /* --bg-color: #22272d;
     --card-bg: #22272d;
     --btn-color: #1d2127;
     --primary-hover: #2e333a;
@@ -8,11 +11,23 @@
     --text-muted: #8d9855;
     --border: #373e47;
     --header-color: #d4be98;
-    --label-color: #c49852;
+    --label-color: #c49852; */
+
+    --bg-color: #ddddc9;
+    --card-bg: #d0d0ba;
+    --btn-color: #ddddc9;
+    --primary-hover: #b1b18a;
+    --text-color: #292a2d;
+    --text-muted: #292a2d;
+    --border: #292a2d;
+    /* --header-color: #c5463f; */
+    --header-color: #57804c;
+    --label-color: #292a2d;
 }
 
 body {
-    font-family: "Cascadia Code", Consolas, "Courier New", monospace;
+    /* font-family: "Cascadia Code", Consolas, "Courier New", monospace; */
+    font-family: "Google Sans Code";
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
@@ -35,7 +50,7 @@ body {
     flex: 1;
     background: var(--card-bg);
     padding: 24px;
-    border: 1px solid var(--border);
+    /* border: 1px solid var(--border); */
     display: flex;
     flex-direction: column;
     min-height: 0;
@@ -61,7 +76,8 @@ input[type="password"],
 textarea {
     width: 100%;
     padding: 10px;
-    border: 0.5px solid var(--border);
+    /* border: 0.5px solid var(--border); */
+    border: none;
     /* border-radius:2px; */
     box-sizing: border-box;
     font-size: 1rem;
@@ -79,8 +95,9 @@ textarea {
 
 input[type="file"]::file-selector-button{
     background-color: var(--bg-color);
-    color: #4b8eab;
-    border: 0.5px solid #4b8eab;
+    color: #292a2d;
+    /* border: 0.5px solid var(--border); */
+    border: none;
     margin-right: 1vh;
 }
 
@@ -147,11 +164,11 @@ button:hover {
 }
 
 .history-list::-webkit-scrollbar-track {
-    background: var(--bg-color);
+    background: var(--card-bg);
 }
 
 .history-list::-webkit-scrollbar-thumb {
-    background: var(--border);
+    background: var(--text-color);
 }
 
 .history-list::-webkit-scrollbar-thumb:hover {
@@ -160,7 +177,7 @@ button:hover {
 
 .history-item {
     padding: 12px 10px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--bg-color);
     display: flex;
     align-items: flex-start;
     /* Aligns image and text to top */
@@ -177,7 +194,7 @@ button:hover {
     /* Match ESP32 64x64 scale (or set to 80px / 100px) */
     height: 80px;
     object-fit: fill;
-    border: 1px solid var(--border);
+    /* border: 1px solid var(--border); */
     flex-shrink: 0;
     cursor: pointer;
     transition: transform 0.15s ease;
@@ -238,7 +255,7 @@ button:hover {
     position: absolute;
     top: 20px;
     right: 30px;
-    color: #e96963;
+    color: var(--bg-color);
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
