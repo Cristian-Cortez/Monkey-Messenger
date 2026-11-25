@@ -135,6 +135,21 @@ button:hover {
     background-color: var(--primary-hover);
 }
 
+.delete-btn{
+    width: 5%;
+    height: 1%;
+    background-color: var(--card-bg);
+    font-size: 0.75rem;
+    padding: 0px;
+    margin-left:8px;
+}
+
+.delete-btn svg{
+    display:block;
+    width: 1.1em;
+    height: 1.1em;
+}
+
 #status {
     margin-top: 10px;
     font-size: 0.875rem;
@@ -153,6 +168,8 @@ button:hover {
 
 
 .history-date {
+    display: flex;
+    align-items: center;
     font-size: 0.75rem;
     color: var(--text-muted);
     word-break: break-word;
@@ -217,11 +234,6 @@ button:hover {
 .history-text {
     word-break: break-word;
     margin-bottom: 4px;
-}
-
-.history-date {
-    font-size: 0.75rem;
-    color: var(--text-muted);
 }
 
 /* Modal Overlay Backdrop */

@@ -153,7 +153,16 @@ async function loadHistory() {
                 ${imgHTML}
                 <div class="history-content">
                     <div class="history-text">${msg.text || ''}</div>
-                    <div class="history-date">${date}</div>
+                    <div class="history-date">${date}
+                        <button type="button" class="delete-btn" onclick="deleteMessage(${msg.id})">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             `;
 
@@ -161,5 +170,29 @@ async function loadHistory() {
         });
     } catch (err) {
         historyList.innerHTML = '<li class="history-item">Error fetching history.</li>';
+    }
+}
+
+// function to delete a message via API
+async function deleteMessage(messageId) {
+    if (!confirm("Delete this message?")) return;
+
+    const apiKey = document.getElementById("apiKey").value.trim();
+
+    try {
+        const response = await fetch(`/api/monkey_messages/delete/${messageId}/`, {
+            method: "DELETE",
+            headers: { "X-API-Key": apiKey }
+        });
+
+        if (!response.ok) {
+            alert("Failed to delete message.");
+            return;
+        }
+
+        // Reload the list without refreshing the whole page
+        loadHistory();
+    } catch (err) {
+        alert("Error deleting message.");
     }
 }

@@ -222,6 +222,30 @@ def message_history(request):
     })
 
 #-----------------------------------------------------------------------------
+# DELETE to delete a specific message + image from the db
+#-----------------------------------------------------------------------------
+@csrf_exempt
+def delete_message(request, message_id):
+    if request.method != "DELETE":
+        return JsonResponse(
+            {"error": "Method not allowed"},
+            status=405,
+        )
+    
+    if not authorized(request):
+        return JsonResponse(
+            {"error": "Unauthorized"},
+            status=401,
+        )
+
+    message = Monkey_Message.objects.get(id=message_id)
+    if message.image:
+        message.image.delete(save=False)
+    message.delete()
+
+    return JsonResponse({"status":"deleted"})
+
+#-----------------------------------------------------------------------------
 # base view to render index page
 #-----------------------------------------------------------------------------
 def index_ui(request):
